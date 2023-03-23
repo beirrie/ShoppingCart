@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Gallery Page";
+    List<Product> products = (List<Product>)ViewData["products"];
+    string searchstring = (string)ViewData["searchstring"];
+}
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
+<h2 style="text-align: left;" class="fw-bolder mb-4">Product Gallery</h2>
+
+@* Product Searchbar *@
+<div class="row row-content gx-2">
+    <div class="col-12">
+        <form action="/Home/Search" method="post" class=" my-2 my-lg-0">
+            <div class="input-group">
+                <input class="form-control border-end rounded" value="@searchstring" id="searchstring" name="searchstring" type="text" placeholder="Enter your search here..." name="searchfield" id="searchfield">
+                <span class="input-group-append">
+                    <button class="btn search-btn bg-white border mx-auto"
+                            type="submit" name="searchBtn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+
+@if (products.Count == 0)
+{
+    <p>No Products are found based on search criteria</p>
+}
+else
+{
+    <!-- Section-->
+    <section>
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-5 row-cols-3">
+                @foreach (Product product in products)
+                {
+                    <div class="col mb-5" style="max-width:350px;">
+                        <div class="card h-100">
+                            <img class="card-img-top" src=@product.ProductImg alt="image not found" style="object-fit: contain; padding: 2rem; width: 300px;" title="View Product Details">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <h5 class="fw-bolder">@product.ProductName</h5>
+                                    <div class="mb-2">
+                                        <i class="fa fa-2xs fa-star @(product.AverageRatingFromOrderDetails >= 1 ? "checked" : "")"></i><i class="fa fa-2xs fa-star @(product.AverageRatingFromOrderDetails >= 2 ? "checked" : "")"></i><i class="fa fa-2xs fa-star @(product.AverageRatingFromOrderDetails >= 3 ? "checked" : "")"></i><i class="fa fa-2xs fa-star @(product.AverageRatingFromOrderDetails >= 4 ? "checked" : "")"></i><i class="fa fa-2xs fa-star @(product.AverageRatingFromOrderDetails >= 5 ? "checked" : "")"></i>
+                                    </div>
+                                    <p class="card-text">
+                                        <span class="font-weight-bold">$ @product.ProductPrice</span>
+                                    </p>
+                                    <p class="card-text font-weight-light">
+                                        @product.ProductDescription
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent text-center">
+                                <button type="button" class="btn btn-outline-primary AddToCart" id="@product.ProductId" value="@product.ProductId">
+                                    <span class="fa-solid fa-cart-arrow-down"></span> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}

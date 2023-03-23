@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Login";
+    var returnUrl = ViewBag.ReturnUrl;
+    if (returnUrl == null)
+    {
+        returnUrl = HttpContextAccessor.HttpContext.Request.Headers["Referer"];
+    }
+
+    string loginflag = (string)TempData["loginflag"];
+    string checkoutfail = (string)ViewData["checkoutfail"];
+    string username = "";
+
+    if (ViewData["username"] != null)
+    {
+        username = (string)ViewData["username"];
+    }
+}
+
+@{
+    using (Html.BeginForm("Login", "Account", new { returnUrl = returnUrl }))
+    {
+        <div class="container" align="center">
+            <div class="col-md-6" align="left">
+                <div class="form-group" align="left">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" value="@username" required>
+                </div>
+                <div class="form-group" align="left">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <small id="text" class="form-text text-muted" align="right"><span style="color:red;">@loginflag</span></small>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    }
+}
+
+

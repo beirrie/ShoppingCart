@@ -1,0 +1,87 @@
+﻿@model List<PurchaseViewModel>
+@{
+    string checkRating(int product_rating, int current_star)
+    {
+        if (product_rating == current_star)
+        {
+            return "checked";
+        }
+        return "";
+    }
+}
+
+<h2 style="text-align: left;" class="fw-bolder mb-4">My Purchases</h2>
+
+@{
+    if (Model.Count == 0)
+    {
+        @:You have yet to make any purchases.
+    }
+}
+@foreach (var purchase in Model)
+{
+    <div class="row mb-5">
+        <div class="col-6 px-5 setting">
+            <div class="card-deck px-5 setting">
+                <div class="card">
+                    <img class="card-img-top" src=@purchase.ProductImg alt="image not found" height="200" style="object-fit: contain;" title="View Product Details">
+                    <h5 class="card-header">@purchase.ProductName</h5>
+                    <div class="card-body">
+                        <p class="card-text d-flex justify-content-between">
+                        </p>
+                        <p class="card-text font-weight-light">
+                            @purchase.ProductDescription
+                        </p>
+                        <p></p>
+                    </div>
+                    <div class="card-footer bg-transparent text-center">
+                        <button type="button" class="btn btn-outline-primary" id="@purchase.ProductId" value="@purchase.ProductId">
+                            <span class="fa-solid fa-cart-arrow-down"></span> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 pt-3">
+
+            <p class="small"> Order ID: <b>#@purchase.OrderId </b></p>
+            <p>Purchased On: @purchase.Date</p>
+            <p>Purchase Price: $@purchase.PurchasePrice</p>
+            <p>Quantity: @purchase.Quantity</p>
+            <p>
+                Activation Code
+                <div style="width: 50%">
+                    <select class="form-select" aria-label="Default select example">
+                        @foreach (ActivationCode ac in purchase.ActivationCodes)
+                        {
+                            <option>@ac.Code</option>
+                        }
+                    </select>
+                    @{
+                        string divid = "rate_" + purchase.OrderId + "_" + purchase.ProductId;
+                        string buttonid = "button_" + purchase.OrderId + "_" + purchase.ProductId;
+                        string starid = "star_" + purchase.OrderId + "_" + purchase.ProductId;
+                        <div class="left">
+                            <form class="rate" id=@divid style="pointer-events: none">
+                                <input type="radio" id=5_@starid name="rate" value="5" class="individual_rating" @checkRating(purchase.Rating, 5) />
+                                <label for=5_@starid title="text">5 stars</label>
+                                <input type="radio" id=4_@starid name="rate" value="4" class="individual_rating" @checkRating(purchase.Rating, 4) />
+                                <label for=4_@starid title="text">4 stars</label>
+                                <input type="radio" id=3_@starid name="rate" value="3" class="individual_rating" @checkRating(purchase.Rating, 3) />
+                                <label for=3_@starid title="text">3 stars</label>
+                                <input type="radio" id=2_@starid name="rate" value="2" class="individual_rating" @checkRating(purchase.Rating, 2) />
+                                <label for=2_@starid title="text">2 stars</label>
+                                <input type="radio" id=1_@starid name="rate" value="1" class="individual_rating" @checkRating(purchase.Rating, 1) />
+                                <label for=1_@starid title="text">1 star</label>
+                            </form>
+                            <button onclick="SaveFunction(this)" id=@buttonid class="btn btn-outline-primary">Edit Rating</button>
+                        </div>
+                    }
+                </div>
+            </p>
+        </div>
+    </div>
+}
+
+<script src="~/js/Rating.js"></script>
+
